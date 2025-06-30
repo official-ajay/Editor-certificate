@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Verified Editor Certificate</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
+
+  <h2 style="color: #2c3e50;">Editor Verification Form</h2>
+  <form id="certForm" style="background: #ffffff; padding: 20px; border-radius: 10px; max-width: 450px;">
+    <label>Full Name:</label><br>
+    <input type="text" id="name" required style="width:100%; margin-bottom: 10px;"><br>
+
+    <label>Editing Type:</label><br>
+    <input type="text" id="type" required style="width:100%; margin-bottom: 10px;"><br>
+
+    <label>Location:</label><br>
+    <input type="text" id="location" required style="width:100%; margin-bottom: 10px;"><br>
+
+    <label>Date:</label><br>
+    <input type="date" id="date" required style="width:100%; margin-bottom: 20px;"><br>
+
+    <button type="submit" style="padding: 10px 20px; background: #2980b9; color: white; border: none; border-radius: 5px;">Generate Certificate</button>
+  </form>
+
+  <script>
+    document.getElementById("certForm").addEventListener("submit", function(e){
+      e.preventDefault();
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      // Get values
+      const name = document.getElementById("name").value.trim();
+      const type = document.getElementById("type").value.trim();
+      const location = document.getElementById("location").value.trim();
+      const date = document.getElementById("date").value;
+
+      // Generate Editor ID (random 4-digit number)
+      const randomID = Math.floor(1000 + Math.random() * 9000);
+      const editorID = `EVF-${randomID}`;
+
+      // Generate Username (official_name_EV)
+      const usernameBase = name.toLowerCase().replace(/\s+/g, "");
+      const username = `official_${usernameBase}_EV`;
+
+      // PDF Layout
+      doc.setFontSize(18);
+      doc.text("🎖️ Editor Verifier Foundation 🎖️", 20, 20);
+      doc.setFontSize(14);
+      doc.text("This is to certify that", 20, 40);
+      doc.setFontSize(16);
+      doc.text(name, 20, 50);
+      doc.text(`is a Verified ${type} Editor.`, 20, 60);
+      doc.setFontSize(12);
+      doc.text(`Location: ${location}`, 20, 75);
+      doc.text(`Date: ${date}`, 20, 85);
+      doc.text(`Editor ID: ${editorID}`, 20, 95);
+      doc.text(`Username: ${username}`, 20, 105);
+      doc.text("Authorized by: Editor Verifier Foundation", 20, 120);
+
+      // Save PDF
+      doc.save(`Editor_Certificate_${name}.pdf`);
+    });
+  </script>
+
+</body>
+  </html>
